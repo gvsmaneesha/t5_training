@@ -6,6 +6,8 @@ import numpy as np
 import textwrap
 from tqdm.auto import tqdm
 from sklearn import metrics
+from torch.utils.data import Dataset, DataLoader
+
 
 from learning_modules.t5_tuning_modules import T5Tokenizer,TweetDataset,LoggingCallback,T5FineTuner
 
@@ -14,6 +16,7 @@ with open('config/configuration.yaml',"r") as f:
 
 if "__name__"=="__main__":
         # load Dataset
+        print("training data import")
         train_df = read_csv("datasets/tweet_dataset.csv")
         train, validate, test = np.split(train_df.sample(frac=1), [int(.6 * len(train_df)), int(.8 * len(train_df))])
         train.to_csv("datasets/train.csv")
@@ -60,20 +63,6 @@ if "__name__"=="__main__":
 
         dataset = TweetDataset(tokenizer, data_dir='kaggle/input/tweet-sentiment-extraction/', type_path='val')
         loader = DataLoader(dataset, batch_size=32, num_workers=4)
-
-        model.model.eval()
-        outputs = []
-        targets = []
-        for batch in tqdm(loader):
-                outs = model.model.generate(input_ids=batch['source_ids'].cuda(),
-                                            attention_mask=batch['source_mask'].cuda(),
-                                            max_length=200)
-
-                dec = [tokenizer.decode(ids) for ids in outs]
-                target = [tokenizer.decode(ids) for ids in batch["target_ids"]]
-
-                outputs.extend(dec)
-                targets.extend(target)
 
 
 
