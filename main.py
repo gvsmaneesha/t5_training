@@ -1,3 +1,4 @@
+print("imported all modules...")
 import yaml
 from pandas import read_csv
 import pytorch_lightning  as pl
@@ -7,14 +8,16 @@ import textwrap
 from tqdm.auto import tqdm
 from sklearn import metrics
 from torch.utils.data import Dataset, DataLoader
-
-
 from learning_modules.t5_tuning_modules import T5Tokenizer,TweetDataset,LoggingCallback,T5FineTuner
-
+print("successfully imported all modules")
 with open('config/configuration.yaml',"r") as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
 
-if "__name__"=="__main__":
+print(config)
+config["args_dict"]["learning_rate"] = float(config["args_dict"]["learning_rate"])
+config["args_dict"]["adam_epsilon"] = float(config["args_dict"]["adam_epsilon"])
+
+if __name__ == "__main__":
         # load Dataset
         print("training data import")
         train_df = read_csv("datasets/tweet_dataset.csv")
@@ -27,7 +30,7 @@ if "__name__"=="__main__":
         tokenizer = T5Tokenizer.from_pretrained('t5-base')
 
         #load dataset
-        dataset = TweetDataset(tokenizer, data_dir='kaggle/input/tweet-sentiment-extraction/', type_path='val')
+        dataset = TweetDataset(tokenizer, data_dir='datasets/', type_path='val')
         print("Length of dataset is :",len(dataset))
 
         data = dataset[69]
@@ -61,7 +64,7 @@ if "__name__"=="__main__":
         #fitmodel
         trainer.fit(model)
 
-        dataset = TweetDataset(tokenizer, data_dir='kaggle/input/tweet-sentiment-extraction/', type_path='val')
+        dataset = TweetDataset(tokenizer, data_dir='datasets/', type_path='val')
         loader = DataLoader(dataset, batch_size=32, num_workers=4)
 
 
