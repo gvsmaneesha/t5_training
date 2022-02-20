@@ -35,7 +35,7 @@ class T5FineTuner(pl.LightningModule):
     def __init__(self, hparams):
         super(T5FineTuner, self).__init__()
         self.hparams = hparams
-        self.labels = None
+        self.lm_labels = None
         self.model = T5ForConditionalGeneration.from_pretrained(hparams.model_name_or_path)
         self.tokenizer = T5Tokenizer.from_pretrained(hparams.tokenizer_name_or_path)
 
@@ -43,25 +43,25 @@ class T5FineTuner(pl.LightningModule):
         return self.trainer.proc_rank <= 0
 
     def forward(
-            self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None
+            self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, lm_labels=None
     ):
-        labels = labels
+        lm_labels = lm_labels
         return self.model(
             input_ids,
             attention_mask=attention_mask,
             decoder_input_ids=decoder_input_ids,
             decoder_attention_mask=decoder_attention_mask,
-            labels=labels,
+            lm_labels=lm_labels,
         )
 
     def _step(self, batch):
-        labels = batch["target_ids"]
-        labels[labels[:, :] == self.tokenizer.pad_token_id] = -100
+        lm_labels = batch["target_ids"]
+        lm_labels[lm_labels[:, :] == self.tokenizer.pad_token_id] = -100
 
         outputs = self(
             input_ids=batch["source_ids"],
             attention_mask=batch["source_mask"],
-            labels=labels,
+            lm_labels=lm_labels,
             decoder_attention_mask=batch['target_mask']
         )
 
