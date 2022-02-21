@@ -40,7 +40,7 @@ class T5FineTuner(pl.LightningModule):
         self.tokenizer = T5Tokenizer.from_pretrained(hparams.tokenizer_name_or_path)
 
     def is_logger(self):
-        return self.trainer.proc_rank <= 0
+        return self.trainer.global_rank <= 0
 
     def forward(
             self, input_ids, attention_mask=None, decoder_input_ids=None, decoder_attention_mask=None, labels=None
