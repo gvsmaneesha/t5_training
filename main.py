@@ -2,13 +2,13 @@ print("imported all modules...")
 import yaml
 import pytorch_lightning  as pl
 import argparse
-import numpy as np
 import textwrap
 from tqdm.auto import tqdm
 from sklearn import metrics
 from torch.utils.data import Dataset, DataLoader
 from learning_modules.t5_tuning_modules import T5Tokenizer,TweetDataset,LoggingCallback,T5FineTuner
 from learning_modules.data_utils import create_dataset
+
 print("successfully imported all modules")
 with open('config/configuration.yaml',"r") as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
@@ -19,18 +19,11 @@ config["args_dict"]["adam_epsilon"] = float(config["args_dict"]["adam_epsilon"])
 
 if __name__ == "__main__":
         create_dataset("tweet_dataset.csv")
-
         #token initializer
         tokenizer = T5Tokenizer.from_pretrained('t5-base')
-
         #load dataset
         dataset = TweetDataset(tokenizer, data_dir='datasets/', type_path='val')
-        print("Length of dataset is :",len(dataset))
-
         data = dataset[69]
-        print(tokenizer.decode(data['source_ids']))
-        print(tokenizer.decode(data['target_ids']))
-
         args = argparse.Namespace(**config["args_dict"])
 
         checkpoint_callback = pl.callbacks.ModelCheckpoint(

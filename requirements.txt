@@ -1,7 +1,7 @@
 transformers==4.12.5
 sentencepiece
 torchtext==0.6.0
-torch==1.7.1
+torch==1.5.0
 pytorch-lightning==1.2.2
 pyyaml
 nltk
