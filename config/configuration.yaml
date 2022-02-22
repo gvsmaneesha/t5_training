@@ -21,7 +21,7 @@ args_dict:
 
 train_params:
     accumulate_grad_batches : 1
-    gpus : 1
+    gpus : 0
     max_epochs : 1
     precision : 32
     amp_level : 'O1'
