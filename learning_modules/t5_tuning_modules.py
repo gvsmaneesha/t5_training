@@ -220,7 +220,7 @@ class SwagProcessor(DataProcessor):
     def get_dev_examples(self, data_dir):
         """See base class."""
         logger.info("LOOKING AT {} dev".format(data_dir))
-        return self._create_examples(self._read_csv(os.path.join(data_dir, "val.csv")), "val")
+        return self._create_examples(self._read_csv(os.path.join(data_dir, "val.csv")), "dev")
 
     def get_test_examples(self, data_dir):
         """See base class."""
@@ -239,10 +239,7 @@ class SwagProcessor(DataProcessor):
         """Creates examples for the training and dev sets."""
         print(lines[0])
         if type == "train" and lines[0][2] != "selected_text":
-            print(type)
-            #raise ValueError("For training, the input file must contain a label column.")
-            print(lines)
-
+            raise ValueError("For training, the input file must contain a label column.")
 
         examples = [
             InputExample(
