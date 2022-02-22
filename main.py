@@ -1,6 +1,5 @@
 print("imported all modules...")
 import yaml
-from pandas import read_csv
 import pytorch_lightning  as pl
 import argparse
 import numpy as np
@@ -9,6 +8,7 @@ from tqdm.auto import tqdm
 from sklearn import metrics
 from torch.utils.data import Dataset, DataLoader
 from learning_modules.t5_tuning_modules import T5Tokenizer,TweetDataset,LoggingCallback,T5FineTuner
+from learning_modules.data_utils import create_dataset
 print("successfully imported all modules")
 with open('config/configuration.yaml',"r") as f:
         config = yaml.load(f,Loader=yaml.FullLoader)
@@ -18,14 +18,7 @@ config["args_dict"]["learning_rate"] = float(config["args_dict"]["learning_rate"
 config["args_dict"]["adam_epsilon"] = float(config["args_dict"]["adam_epsilon"])
 
 if __name__ == "__main__":
-        # load Dataset
-        print("training data import")
-        train_df = read_csv("datasets/tweet_dataset.csv")
-        train_df = train_df[["textID", "text", "selected_text", "sentiment"]]
-        train, validate, test = np.split(train_df.sample(frac=1), [int(.6 * len(train_df)), int(.8 * len(train_df))])
-        train.to_csv("datasets/train.csv",index=False)
-        validate.to_csv("datasets/val.csv",index=False)
-        test.to_csv("datasets/test.csv",index=False)
+        create_dataset("tweet_dataset.csv")
 
         #token initializer
         tokenizer = T5Tokenizer.from_pretrained('t5-base')
