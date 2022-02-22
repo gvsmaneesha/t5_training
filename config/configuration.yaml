@@ -19,12 +19,10 @@ args_dict:
     max_grad_norm : 1.0
     seed : 42
 
-
-
 train_params:
-    accumulate_grad_batches : args.gradient_accumulation_steps,
-    gpus : args.n_gpu,
-    max_epochs : args.num_train_epochs,
-    precision : 16 if args.fp_16 else 32,
-    amp_level : args.opt_level,
-    gradient_clip_val : args.max_grad_norm,
+    accumulate_grad_batches : 1
+    gpus : 1
+    max_epochs : 1
+    precision : 32
+    amp_level : 'O1'
+    gradient_clip_val :  1.0

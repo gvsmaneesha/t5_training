@@ -21,10 +21,11 @@ if __name__ == "__main__":
         # load Dataset
         print("training data import")
         train_df = read_csv("datasets/tweet_dataset.csv")
+        train_df = train_df[["textID", "text", "selected_text", "sentiment"]]
         train, validate, test = np.split(train_df.sample(frac=1), [int(.6 * len(train_df)), int(.8 * len(train_df))])
-        train.to_csv("datasets/train.csv")
-        validate.to_csv("datasets/val.csv")
-        test.to_csv("datasets/test.csv")
+        train.to_csv("datasets/train.csv",index=False)
+        validate.to_csv("datasets/val.csv",index=False)
+        test.to_csv("datasets/test.csv",index=False)
 
         #token initializer
         tokenizer = T5Tokenizer.from_pretrained('t5-base')
@@ -58,9 +59,10 @@ if __name__ == "__main__":
         # Model Intializer
         model = T5FineTuner(args)
 
+        print("Training model")
         #trainer
         trainer = pl.Trainer(**train_params)
-
+        print("Fitting the model")
         #fitmodel
         trainer.fit(model)
 
