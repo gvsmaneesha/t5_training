@@ -1,7 +1,8 @@
-transformers==4.12.5
+numpy
+pandas
 sentencepiece
-torchtext==0.6.0
-torch==1.5.0
-pytorch-lightning==1.2.2
+torch>=1.7.0,!=1.8.0
+transformers==4.16.2
+pytorch-lightning==1.5.10
 pyyaml
 nltk
